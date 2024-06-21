@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PersediaanController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\PendapatanController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +21,4 @@ use App\Http\Controllers\PendapatanController;
 Route::apiResource('persediaan', PersediaanController::class);
 Route::apiResource('pengeluaran', PengeluaranController::class);
 Route::apiResource('pendapatan', PendapatanController::class);
+Route::apiResource('users', UserController::class);
