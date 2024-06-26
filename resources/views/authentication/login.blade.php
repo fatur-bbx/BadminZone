@@ -37,7 +37,7 @@
             font-weight: 400;
             font-size: 16px;
         }
-        .form-control{
+        .form-control {
             font-weight: 400;
             font-size: 14px;
         }
@@ -49,10 +49,14 @@
     </div>
     <div class="login-container">
         <h3 class="login-header">Login to your account</h3>
-        <form>
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter your email">
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                @if ($errors->has('email'))
+                    <span class="text-danger">{{ $errors->first('email') }}</span>
+                @endif
             </div>
             <div class="form-group">
                 <div class="row w-100">
@@ -60,17 +64,20 @@
                         <label for="password">Password</label>
                     </div>
                     <div class="col text-right mr-0 pr-0">
-                        <a href="#" class="text-primary">Forgot ?</a>
+                        <a href="#" class="text-primary">Forgot?</a>
                     </div>
                 </div>
-                <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                @if ($errors->has('password'))
+                    <span class="text-danger">{{ $errors->first('password') }}</span>
+                @endif
             </div>
             <button type="submit" class="btn btn-primary btn-block" style="font-weight: 600; font-size: 14px; background-color: #1570EF;">Login now</button>
         </form>
     </div>
 
     <!-- Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>

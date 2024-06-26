@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pendapatan;
+// use Illuminate\Support\Facades\Http;
 
 class PendapatanController extends Controller
 {
     public function index()
     {
         $pendapatan = Pendapatan::all();
-        return response()->json($pendapatan);
+        return view('dashboard.pendapatan', compact('pendapatan'));
     }
 
     public function store(Request $request)
@@ -24,14 +25,8 @@ class PendapatanController extends Controller
             'tanggal_pendapatan' => 'required|date',
         ]);
 
-        $pendapatan = Pendapatan::create($request->all());
-        return response()->json($pendapatan, 201);
-    }
-
-    public function show($id)
-    {
-        $pendapatan = Pendapatan::findOrFail($id);
-        return response()->json($pendapatan);
+        Pendapatan::create($request->all());
+        return redirect()->route('pendapatan')->with('success', 'Data berhasil ditambahkan!');
     }
 
     public function update(Request $request, $id)
@@ -47,13 +42,13 @@ class PendapatanController extends Controller
 
         $pendapatan = Pendapatan::findOrFail($id);
         $pendapatan->update($request->all());
-        return response()->json($pendapatan);
+        return redirect()->route('pendapatan')->with('success', 'Data berhasil diupdate!');
     }
 
     public function destroy($id)
     {
         $pendapatan = Pendapatan::findOrFail($id);
         $pendapatan->delete();
-        return response()->json(null, 204);
+        return redirect()->route('pendapatan')->with('success', 'Data berhasil dihapus!');
     }
 }

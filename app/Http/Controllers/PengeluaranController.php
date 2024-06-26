@@ -9,8 +9,8 @@ class PengeluaranController extends Controller
 {
     public function index()
     {
-        $pengeluaran = Pengeluaran::all();
-        return response()->json($pengeluaran);
+        $pengeluaran = Pengeluaran::with('persediaan')->get();
+        return view('dashboard.pengeluaran', compact('pengeluaran'));
     }
 
     public function store(Request $request)
@@ -24,14 +24,8 @@ class PengeluaranController extends Controller
             'tanggal_pengeluaran' => 'required|date',
         ]);
 
-        $pengeluaran = Pengeluaran::create($request->all());
-        return response()->json($pengeluaran, 201);
-    }
-
-    public function show($id)
-    {
-        $pengeluaran = Pengeluaran::findOrFail($id);
-        return response()->json($pengeluaran);
+        Pengeluaran::create($request->all());
+        return redirect()->route('pengeluaran')->with('success', 'Data berhasil ditambahkan!');
     }
 
     public function update(Request $request, $id)
@@ -47,13 +41,13 @@ class PengeluaranController extends Controller
 
         $pengeluaran = Pengeluaran::findOrFail($id);
         $pengeluaran->update($request->all());
-        return response()->json($pengeluaran);
+        return redirect()->route('pengeluaran')->with('success', 'Data berhasil diupdate!');
     }
 
     public function destroy($id)
     {
         $pengeluaran = Pengeluaran::findOrFail($id);
         $pengeluaran->delete();
-        return response()->json(null, 204);
+        return redirect()->route('pengeluaran')->with('success', 'Data berhasil dihapus!');
     }
 }
