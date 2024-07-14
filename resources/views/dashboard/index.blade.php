@@ -20,8 +20,11 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Earnings (Monthly)</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                    Pendapatan</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">Rp. <span id="pendapatan">{{ number_format($totalPendapatan,2) }}</span></div>
+                                <div class="text-xs font-weight-bold text-gray-800 mb-1">
+                                    Perubahan: <span id="pendapatan-perubahan">{{ number_format($pendapatanPerubahan,2) }}%</span>
+                                </div>
                             </div>
                             <div class="col-auto">
                                 <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -30,14 +33,18 @@
                     </div>
                 </div>
             </div>
+            
             <div class="col-xl-4 col-md-6 mb-4">
                 <div class="card border-left-success shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    Earnings (Annual)</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                                    Pengeluaran</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">Rp. <span id="pengeluaran">{{ number_format($totalPengeluaran,2) }}</span></div>
+                                <div class="text-xs font-weight-bold text-gray-800 mb-1">
+                                    Perubahan: <span id="pengeluaran-perubahan">{{ number_format($pengeluaranPerubahan,2) }}%</span>
+                                </div>
                             </div>
                             <div class="col-auto">
                                 <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -46,25 +53,16 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Earnings (Monthly) Card Example -->
+            
             <div class="col-xl-4 col-md-6 mb-4">
                 <div class="card border-left-info shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
-                                </div>
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col-auto">
-                                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="progress progress-sm mr-2">
-                                            <div class="progress-bar bg-info" role="progressbar" style="width: 50%"
-                                                aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </div>
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Laba Bersih</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">Rp. <span id="labaBersih">{{ number_format($labaBersih,2) }}</span></div>
+                                <div class="text-xs font-weight-bold text-gray-800 mb-1">
+                                    Perubahan: <span id="laba-perubahan">{{ number_format($labaPerubahan,2) }}%</span>
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -73,7 +71,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>            
         </div>
         <h2 class="mt-5 mb-0">App Pages</h2>
         <p>App pages to cover common use pages to help build your app!</p>

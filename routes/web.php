@@ -31,16 +31,12 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    // Mengambil total ketersediaan semua barang
     $totalStock = Persediaan::sum('jumlah_persediaan');
-
-    // Mengambil 4 barang dengan ketersediaan paling sedikit
     $lowStockProducts = Persediaan::select('nama_barang', 'jumlah_persediaan')
         ->orderBy('jumlah_persediaan')
         ->take(4)
         ->get();
 
-    // Mendapatkan top 4 produk berdasarkan total jumlah
     $topProducts = Pendapatan::with('persediaan')
         ->select('barang', 'deskripsi', DB::raw('SUM(jumlah) as total_jumlah'))
         ->groupBy('barang', 'deskripsi')
@@ -48,10 +44,8 @@ Route::get('/dashboard', function () {
         ->take(4)
         ->get();
 
-    // Menghitung total penjualan keseluruhan
     $totalPenjualan = $topProducts->sum('total_jumlah');
 
-    // Menghitung pendapatan per minggu berdasarkan harga * jumlah
     $currentMonth = Carbon::now()->month;
     $lastMonth = Carbon::now()->subMonth()->month;
 
@@ -79,7 +73,6 @@ Route::get('/dashboard', function () {
         ->orderBy('week')
         ->pluck('total');
 
-    // Mengambil jumlah pendapatan dan pengeluaran per bulan di tahun ini
     $currentYear = Carbon::now()->year;
 
     $pendapatanPerBulan = Pendapatan::selectRaw('MONTH(tanggal_pendapatan) as month, COUNT(*) as count')
@@ -104,7 +97,22 @@ Route::get('/dashboard', function () {
 
     $totalJumlahPersediaan = Persediaan::sum('jumlah_persediaan');
 
-    return view('dashboard/index', compact('lowStockProducts', 'totalStock', 'topProducts', 'totalPenjualan', 'fieldVisits', 'pendapatanBulanIni', 'pendapatanBulanLalu', 'pengeluaranBulanIni', 'pengeluaranBulanLalu', 'totalJumlahPersediaan', 'pendapatanPerBulan', 'pengeluaranPerBulan'));
+    $totalPendapatan = Pendapatan::whereMonth('created_at', Carbon::now()->month)
+        ->sum(DB::raw('harga * jumlah'));
+    $totalPengeluaran = Pengeluaran::whereMonth('created_at', Carbon::now()->month)
+        ->sum(DB::raw('harga * jumlah'));
+    $labaBersih = $totalPendapatan - $totalPengeluaran;
+    $lastWeekPendapatan = Pendapatan::whereBetween('created_at', [Carbon::now()->subWeek(), Carbon::now()])
+        ->sum(DB::raw('harga * jumlah'));
+
+    $lastWeekPengeluaran = Pengeluaran::whereBetween('created_at', [Carbon::now()->subWeek(), Carbon::now()])
+        ->sum(DB::raw('harga * jumlah'));
+
+    $pendapatanPerubahan = $lastWeekPendapatan ? (($totalPendapatan - $lastWeekPendapatan) / $lastWeekPendapatan) * 100 : 0;
+    $pengeluaranPerubahan = $lastWeekPengeluaran ? (($totalPengeluaran - $lastWeekPengeluaran) / $lastWeekPengeluaran) * 100 : 0;
+    $labaPerubahan = $lastWeekPendapatan - $lastWeekPengeluaran ? (($labaBersih - ($lastWeekPendapatan - $lastWeekPengeluaran)) / ($lastWeekPendapatan - $lastWeekPengeluaran)) * 100 : 0;
+
+    return view('dashboard/index', compact('lowStockProducts', 'totalStock', 'topProducts', 'totalPenjualan', 'fieldVisits', 'totalPendapatan', 'totalPengeluaran', 'labaBersih', 'pendapatanPerubahan', 'pengeluaranPerubahan', 'labaPerubahan', 'pendapatanBulanIni', 'pendapatanBulanLalu', 'pengeluaranBulanIni', 'pengeluaranBulanLalu', 'totalJumlahPersediaan', 'pendapatanPerBulan', 'pengeluaranPerBulan'));
 })->middleware('auth')->name('dashboard');
 
 // PENDAPATAN
