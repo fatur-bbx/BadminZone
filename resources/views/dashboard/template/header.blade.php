@@ -7,7 +7,7 @@
             </div>
         </div>
     </header>
-@elseif(Request::is('pendapatan*'))
+@else
     <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
         <div class="container-xl px-4">
             <div class="page-header-content pt-4">
@@ -15,25 +15,9 @@
                     <div class="col-auto mt-4">
                         <h1 class="page-header-title">
                             <div class="page-header-icon"><i data-feather="filter"></i></div>
-                            Pendapatan
+                            {{ $title }}
                         </h1>
-                        <div class="page-header-subtitle mt-3">Halaman ini menampilkan daftar semua pendapatan yang telah dicatat dalam sistem. Setiap entri pendapatan mencakup informasi detail seperti jenis pendapatan, barang terkait, harga, jumlah, deskripsi, dan tanggal pendapatan.</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-@elseif(Request::is('pengeluaran*'))
-    <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
-        <div class="container-xl px-4">
-            <div class="page-header-content pt-4">
-                <div class="row align-items-center justify-content-between">
-                    <div class="col-auto mt-4">
-                        <h1 class="page-header-title">
-                            <div class="page-header-icon"><i data-feather="filter"></i></div>
-                            Pengeluaran
-                        </h1>
-                        <div class="page-header-subtitle mt-3">Halaman ini menampilkan daftar semua pengeluaran yang telah dicatat dalam sistem. Setiap entri pendapatan mencakup informasi detail seperti jenis pengeluaran, barang terkait, harga, jumlah, deskripsi, dan tanggal pengeluaran.</div>
+                        <div class="page-header-subtitle mt-3">{{ $subtitle }}</div>
                     </div>
                 </div>
             </div>

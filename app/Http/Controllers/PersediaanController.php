@@ -4,13 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Persediaan;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\PersediaanExport;
+use App\Imports\PersediaanImport;
 
 class PersediaanController extends Controller
 {
     public function index()
     {
-        $persediaan = Persediaan::all();
-        return response()->json($persediaan);
+        $persediaan = Persediaan::orderBy('updated_at', 'desc')->get();
+        $title = "Persediaan";
+        $subtitle = "Halaman ini menampilkan daftar semua persediaan yang telah dicatat dalam sistem. Setiap entri persediaan mencakup informasi detail seperti nama barang, harga barang, jumlah, dan harga.";
+        return view('dashboard.persediaan', compact('persediaan', 'title', 'subtitle'));
     }
 
     public function store(Request $request)
@@ -21,14 +27,11 @@ class PersediaanController extends Controller
             'jumlah_persediaan' => 'required|integer',
         ]);
 
-        $persediaan = Persediaan::create($request->all());
-        return response()->json($persediaan, 201);
-    }
+        $data = $request->all();
+        $data['id_persediaan'] = Str::uuid()->toString();
 
-    public function show($id)
-    {
-        $persediaan = Persediaan::findOrFail($id);
-        return response()->json($persediaan);
+        Persediaan::create($data);
+        return redirect()->route('persediaan')->with('success', 'Data berhasil ditambahkan!');
     }
 
     public function update(Request $request, $id)
@@ -41,13 +44,44 @@ class PersediaanController extends Controller
 
         $persediaan = Persediaan::findOrFail($id);
         $persediaan->update($request->all());
-        return response()->json($persediaan);
+        return redirect()->route('persediaan')->with('success', 'Data berhasil diupdate!');
     }
 
     public function destroy($id)
     {
         $persediaan = Persediaan::findOrFail($id);
         $persediaan->delete();
-        return response()->json(null, 204);
+        return redirect()->route('persediaan')->with('success', 'Data berhasil dihapus!');
+    }
+
+    public function export()
+    {
+        $fileName = 'persediaan_' . auth()->user()->name . '_' . now()->format('Ymd_His') . '.xlsx';
+        return Excel::download(new PersediaanExport, $fileName);
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        $file = $request->file('file');
+
+        try {
+            Excel::import(new PersediaanImport, $file);
+        } catch (\Exception $e) {
+            var_dump($e);
+            die;
+            return redirect()->route('persediaan')->with('error', 'Terjadi kesalahan dalam mengimpor file: ' . $e->getMessage());
+        }
+
+        return redirect()->route('persediaan')->with('success', 'Data berhasil diimpor!');
+    }
+
+    public function show()
+    {
+        $fileName = 'persediaan_' . auth()->user()->name . '_' . now()->format('Ymd_His') . '.xlsx';
+        return Excel::download(new PersediaanExport, $fileName);
     }
 }
