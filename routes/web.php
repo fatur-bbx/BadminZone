@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Pendapatan;
 use App\Models\Pengeluaran;
 use App\Models\Persediaan;
+use App\Http\Controllers\UserController;
 use Carbon\Carbon;
 
 /*
@@ -23,7 +24,7 @@ use Carbon\Carbon;
 */
 
 Route::get('/', function () {
-    if (Auth::check() && session('access_token')) {
+    if (Auth::check()) {
         return redirect('/dashboard');
     } else {
         return redirect('/login');
@@ -132,6 +133,13 @@ Route::resource('persediaan', PersediaanController::class)->middleware('auth');
 Route::get('/persediaan', [PersediaanController::class, 'index'])->middleware('auth')->name('persediaan');
 Route::get('/persediaan/export', [PersediaanController::class, 'export'])->name('persediaan.export');
 Route::post('/persediaan/import', [PersediaanController::class, 'import'])->name('persediaan.import');
+
+Route::middleware(['auth', 'checkadmin'])->group(function () {
+    Route::resource('users', UserController::class);
+    Route::get('/users', [UserController::class, 'index'])->name('users');
+    Route::post('users/import', [UserController::class, 'import'])->name('users.import');
+    Route::get('users/export', [UserController::class, 'export'])->name('users.export');
+});
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);

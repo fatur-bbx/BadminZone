@@ -19,6 +19,12 @@
             <div class="nav-link-icon"><i data-feather="grid"></i></div>
             Persediaan
         </a>
+        @if (auth()->user()->level == 0)
+            <a class="nav-link {{ Request::is('users*') ? 'active' : '' }}" href="{{ route('users') }}">
+                <div class="nav-link-icon"><i data-feather="grid"></i></div>
+                Users
+            </a>
+        @endif
     </div>
 </div>
 <!-- Sidenav Footer-->

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\UserExport;
+use App\Imports\UserImport;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -12,58 +14,57 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-        return response()->json($users);
+        $title = "Users";
+        $subtitle = "Halaman ini menampilkan daftar semua pengguna yang ada di dalam aplikasi.";
+        return view('dashboard.users', compact('users', 'title', 'subtitle'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-            'level' => 'required|integer',
-        ]);
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'level' => $request->level,
-        ]);
-
-        return response()->json($user, 201);
+        $userData = $request->except('_token');
+        $userData['password'] = Hash::make($request->password);
+        User::create($userData);
+        return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
-    public function show($id)
+    public function update(Request $request, User $user)
     {
-        $user = User::findOrFail($id);
-        return response()->json($user);
-    }
+        $data = $request->only('name', 'email', 'level');
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $id,
-            'password' => 'sometimes|string|min:8',
-            'level' => 'sometimes|integer',
-        ]);
-
-        $user = User::findOrFail($id);
-
-        if ($request->has('password')) {
-            $request->merge(['password' => Hash::make($request->password)]);
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
         }
-
-        $user->update($request->all());
-
-        return response()->json($user);
+        $user->update($data);
+        return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
 
-    public function destroy($id)
+
+    public function destroy(User $user)
     {
-        $user = User::findOrFail($id);
         $user->delete();
-        return response()->json(null, 204);
+        return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+    }
+
+    public function export()
+    {
+        $fileName = 'users_' . auth()->user()->name . '_' . now()->format('Ymd_His') . '.xlsx';
+        return Excel::download(new UserExport, $fileName);
+    }
+
+    public function show()
+    {
+        $fileName = 'users_' . auth()->user()->name . '_' . now()->format('Ymd_His') . '.xlsx';
+        return Excel::download(new UserExport, $fileName);
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new UserImport, $request->file('file'));
+
+        return redirect()->route('users.index')->with('success', 'Users imported successfully.');
     }
 }

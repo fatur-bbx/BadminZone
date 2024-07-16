@@ -31,18 +31,12 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        session(['access_token' => $token]);
 
         return redirect()->intended('/dashboard');
     }
 
     public function logout(Request $request)
     {
-        $request->user()->tokens()->delete();
-        $request->session()->forget('access_token');
-        
         Auth::logout();
         return redirect('/login');
     }
