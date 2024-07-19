@@ -2,47 +2,48 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Pendapatan;
 use App\Models\Persediaan;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class PendapatanSeeder extends Seeder
 {
+    public function randomDate($startDate, $endDate) {
+        $startTimestamp = strtotime($startDate);
+        $endTimestamp = strtotime($endDate);
+        $randomTimestamp = mt_rand($startTimestamp, $endTimestamp);
+        return Carbon::createFromTimestamp($randomTimestamp);
+    }
+
     public function run()
     {
-        $barangA = Persediaan::where('nama_barang', 'Barang A')->first()->id_persediaan;
-        $barangC = Persediaan::where('nama_barang', 'Barang C')->first()->id_persediaan;
+        $persediaan_ids = Persediaan::pluck('id_persediaan')->toArray();
 
-        Pendapatan::create([
-            'id_pendapatan' => Str::uuid()->toString(),
-            'jenis_pendapatan' => 1,
-            'barang' => $barangA,
-            'harga' => 70000,
-            'jumlah' => 20,
-            'deskripsi' => 'Pendapatan dari penjualan A',
-            'tanggal_pendapatan' => now(),
-        ]);
+        for ($i = 1; $i <= 300; $i++) {
+            $jenis_pendapatan = rand(1, 2);
 
-        Pendapatan::create([
-            'id_pendapatan' => Str::uuid()->toString(),
-            'jenis_pendapatan' => 2,
-            'barang' => $barangC,
-            'harga' => 60000,
-            'jumlah' => 15,
-            'deskripsi' => 'Pendapatan dari penjualan B',
-            'tanggal_pendapatan' => now(),
-        ]);
+            if ($jenis_pendapatan == 1) {
+                $barang_id = $persediaan_ids[array_rand($persediaan_ids)];
+                $barang = Persediaan::find($barang_id);
+                $harga = $barang->harga_pcs;
+            } else {
+                $barang_id = null;
+                $harga = rand(1000, 50000);
+            }
 
-        Pendapatan::create([
-            'id_pendapatan' => Str::uuid()->toString(),
-            'jenis_pendapatan' => 1,
-            'barang' => null,
-            'harga' => 50000,
-            'jumlah' => 10,
-            'deskripsi' => 'Pendapatan lapangan 1',
-            'tanggal_pendapatan' => now(),
-        ]);
+            Pendapatan::create([
+                'id_pendapatan' => Str::uuid(),
+                'jenis_pendapatan' => $jenis_pendapatan,
+                'barang' => $barang_id,
+                'harga' => $harga,
+                'jumlah' => rand(1, 50),
+                'deskripsi' => $jenis_pendapatan == 1 ? 'Barang ' . $barang_id : 'Lapangan ' . $i,
+                'tanggal_pendapatan' => now(),
+                'created_at' => $this->randomDate('2020-01-01', now()->toDateString()),
+                'updated_at' => now()
+            ]);
+        }
     }
 }

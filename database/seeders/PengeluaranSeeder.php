@@ -2,47 +2,50 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Pengeluaran;
 use App\Models\Persediaan;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class PengeluaranSeeder extends Seeder
 {
+    public function randomDate($startDate, $endDate) {
+        $startTimestamp = strtotime($startDate);
+        $endTimestamp = strtotime($endDate);
+        $randomTimestamp = mt_rand($startTimestamp, $endTimestamp);
+        return Carbon::createFromTimestamp($randomTimestamp);
+    }
+
     public function run()
     {
-        $barangA = Persediaan::where('nama_barang', 'Barang A')->first()->id_persediaan;
-        $barangB = Persediaan::where('nama_barang', 'Barang B')->first()->id_persediaan;
+        $persediaan_ids = Persediaan::pluck('id_persediaan')->toArray();
 
-        Pengeluaran::create([
-            'id_pengeluaran' => Str::uuid()->toString(),
-            'jenis_pengeluaran' => 1,
-            'barang' => $barangA,
-            'harga' => 50000,
-            'jumlah' => 10,
-            'deskripsi' => 'Pengeluaran untuk keperluan X',
-            'tanggal_pengeluaran' => now(),
-        ]);
+        for ($i = 1; $i <= 300; $i++) {
+            $jenis_pengeluaran = rand(1, 2);
 
-        Pengeluaran::create([
-            'id_pengeluaran' => Str::uuid()->toString(),
-            'jenis_pengeluaran' => 2,
-            'barang' => $barangB,
-            'harga' => 30000,
-            'jumlah' => 5,
-            'deskripsi' => 'Pengeluaran untuk keperluan Y',
-            'tanggal_pengeluaran' => now(),
-        ]);
+            if ($jenis_pengeluaran == 2) {
+                $barang_id = $persediaan_ids[array_rand($persediaan_ids)];
+                $barang = Persediaan::find($barang_id);
+                $harga = $barang->harga_pcs;
+                $deskripsi = 'Penambahan stok barang';
+            } else {
+                $barang_id = null;
+                $harga = rand(1000, 50000);
+                $deskripsi = 'Pembersihan lapangan ' . $i;
+            }
 
-        Pengeluaran::create([
-            'id_pengeluaran' => Str::uuid()->toString(),
-            'jenis_pengeluaran' => 2,
-            'barang' => null, // Pengeluaran tanpa barang
-            'harga' => 20000,
-            'jumlah' => 3,
-            'deskripsi' => 'Pengeluaran umum',
-            'tanggal_pengeluaran' => now(),
-        ]);
+            Pengeluaran::create([
+                'id_pengeluaran' => Str::uuid(),
+                'jenis_pengeluaran' => $jenis_pengeluaran,
+                'barang' => $barang_id,
+                'harga' => $harga,
+                'jumlah' => rand(1, 50),
+                'deskripsi' => $deskripsi,
+                'tanggal_pengeluaran' => now(),
+                'created_at' => $this->randomDate('2020-01-01', now()->toDateString()),
+                'updated_at' => now()
+            ]);
+        }
     }
 }

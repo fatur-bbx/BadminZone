@@ -28,7 +28,7 @@
                                 <td>{{ $user->id }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
-                                <td>{{ $user->level == 0 ? 'Admin' : 'User' }}</td>
+                                <td>{{ $user->level == 0 ? 'Admin' : 'Staff' }}</td>
                                 <td>
                                     <button class="btn btn-datatable btn-icon btn-transparent-purple" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $user->id }}"><i data-feather="edit"></i></button>
                                     <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
@@ -101,7 +101,7 @@
                             <label for="level" class="form-label">Level</label>
                             <select class="form-control" id="level" name="level" required>
                                 <option value="0">Admin</option>
-                                <option value="1">User</option>
+                                <option value="1">Staff</option>
                             </select>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
                                 <label for="level{{ $user->id }}" class="form-label">Level</label>
                                 <select class="form-control" id="level{{ $user->id }}" name="level" required>
                                     <option value="0" {{ $user->level == 0 ? 'selected' : '' }}>Admin</option>
-                                    <option value="1" {{ $user->level == 1 ? 'selected' : '' }}>User</option>
+                                    <option value="1" {{ $user->level == 1 ? 'selected' : '' }}>Staff</option>
                                 </select>
                             </div>
                         </div>

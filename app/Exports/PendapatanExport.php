@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Pendapatan;
+use App\Models\Persediaan;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
@@ -17,10 +18,16 @@ class PendapatanExport implements FromCollection, WithHeadings
         });
 
         return $pendapatan->map(function ($item) {
+            $barang = null;
+            if($item->barang != null){
+                $temp_barang = Persediaan::where('id_persediaan', $item->barang)->first();
+                $barang = $temp_barang->nama_barang;
+            }
+
             return [
                 'row_number' => $item->row_number,
                 'jenis_pendapatan' => $item->jenis_pendapatan,
-                'barang' => $item->barang,
+                'barang' => $barang,
                 'harga' => $item->harga,
                 'jumlah' => $item->jumlah,
                 'deskripsi' => $item->deskripsi,

@@ -169,7 +169,7 @@
                                                                 Sewa</option>
                                                         </select>
                                                         <div class="mb-2"></div>
-                                                        <div id="fieldBarangEdit">
+                                                        <div id="fieldBarangEdit{{$nomor}}">
                                                             <label for="barang_edit_{{ $nomor }}"
                                                                 class="text-dark">Barang</label>
                                                             <select name="barang_edit_{{ $nomor }}"
@@ -233,29 +233,29 @@
                             </tr>
                             <script>
                                 $(document).ready(function() {
-                                    $('#jenis_pendapatan_edit_{{ $nomor }}').on('change', function() {
-                                        if ($(this).val() == '1') {
-                                            $('#fieldBarangEdit{{ $nomor }}').show();
-                                            $('#deskripsi_edit_{{ $nomor }}').attr('placeholder', 'Masukkan deskripsi');
-                                            $('#harga_edit_{{ $nomor }}').prop('readonly', true);
+                                    $("#jenis_pendapatan_edit_{{ $nomor }}").on("change", function() {
+                                        if ($(this).val() == "1") {
+                                            $("#fieldBarangEdit{{ $nomor }}").show();
+                                            $("#deskripsi_edit_{{ $nomor }}").attr("placeholder", "Masukkan deskripsi");
+                                            $("#harga_edit_{{ $nomor }}").prop("readonly", true);
                                         } else {
-                                            $('#fieldBarangEdit{{ $nomor }}').hide();
-                                            $('#deskripsi_edit_{{ $nomor }}').attr('placeholder',
-                                                'Contoh : Keperluan Pembersih Lantai');
-                                            $('#harga_edit_{{ $nomor }}').prop('readonly', false);
+                                            $("#fieldBarangEdit{{ $nomor }}").hide();
+                                            $("#deskripsi_edit_{{ $nomor }}").attr("placeholder",
+                                                "Contoh : Keperluan Pembersih Lantai");
+                                            $("#harga_edit_{{ $nomor }}").prop("readonly", false);
                                         }
                                     });
 
-                                    $('#jenis_pendapatan_edit_{{ $nomor }}').trigger('change');
+                                    $("#jenis_pendapatan_edit_{{ $nomor }}").trigger("change");
 
-                                    $('#barang_edit_{{ $nomor }}').on('change', function() {
-                                        var harga = $(this).find(':selected').data('harga');
-                                        $('#harga_edit_{{ $nomor }}').val(harga);
+                                    $("#barang_edit_{{ $nomor }}").on("change", function() {
+                                        var harga = $(this).find(":selected").data("harga");
+                                        $("#harga_edit_{{ $nomor }}").val(harga);
                                     });
 
-                                    let tanggalPendapatan = new Date('{{ $item->tanggal_pendapatan }}');
+                                    let tanggalPendapatan = new Date("{{ $item->tanggal_pendapatan }}");
                                     let formattedDate = tanggalPendapatan.toISOString().slice(0, 10);
-                                    document.getElementById('tanggal_pendapatan_edit_{{ $nomor }}').value = formattedDate;
+                                    document.getElementById("tanggal_pendapatan_edit_{{ $nomor }}").value = formattedDate;
 
                                 });
                             </script>
