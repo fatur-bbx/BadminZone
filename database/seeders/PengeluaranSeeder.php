@@ -34,7 +34,7 @@ class PengeluaranSeeder extends Seeder
                 $harga = rand(1000, 50000);
                 $deskripsi = 'Pembersihan lapangan ' . $i;
             }
-
+            $tanggal_sekarang = $this->randomDate('2020-01-01', now()->toDateString());
             Pengeluaran::create([
                 'id_pengeluaran' => Str::uuid(),
                 'jenis_pengeluaran' => $jenis_pengeluaran,
@@ -42,9 +42,9 @@ class PengeluaranSeeder extends Seeder
                 'harga' => $harga,
                 'jumlah' => rand(1, 50),
                 'deskripsi' => $deskripsi,
-                'tanggal_pengeluaran' => now(),
-                'created_at' => $this->randomDate('2020-01-01', now()->toDateString()),
-                'updated_at' => now()
+                'tanggal_pengeluaran' => $tanggal_sekarang,
+                'created_at' => $tanggal_sekarang,
+                'updated_at' => $tanggal_sekarang
             ]);
         }
     }

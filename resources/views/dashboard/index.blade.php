@@ -223,7 +223,6 @@
 
             var pendapatanBulanIni = @json($pendapatanBulanIni);
             var pendapatanBulanLalu = @json($pendapatanBulanLalu);
-
             var labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
 
             var pendapatanChart = new Chart(ctx, {
@@ -232,8 +231,7 @@
                     labels: labels,
                     datasets: [{
                             label: 'Pendapatan Bulan Lalu',
-                            data: pendapatanBulanLalu.concat(Array(4 - pendapatanBulanLalu.length).fill(
-                                0)), // Fill remaining weeks with 0
+                            data: pendapatanBulanLalu,
                             borderColor: 'blue',
                             backgroundColor: 'rgba(0, 123, 255, 0.5)',
                             fill: true,
@@ -241,8 +239,7 @@
                         },
                         {
                             label: 'Pendapatan Bulan Ini',
-                            data: pendapatanBulanIni.concat(Array(4 - pendapatanBulanIni.length).fill(
-                                0)), // Fill remaining weeks with 0
+                            data: pendapatanBulanIni,
                             borderColor: 'green',
                             backgroundColor: 'rgba(40, 167, 69, 0.5)',
                             fill: true,
@@ -272,8 +269,7 @@
                     labels: labels,
                     datasets: [{
                             label: 'Pengeluaran Bulan Lalu',
-                            data: pengeluaranBulanLalu.concat(Array(4 - pengeluaranBulanLalu.length)
-                                .fill(0)), // Fill remaining weeks with 0
+                            data: pengeluaranBulanLalu,
                             borderColor: 'red',
                             backgroundColor: 'rgba(255, 0, 0, 0.5)',
                             fill: true,
@@ -281,8 +277,7 @@
                         },
                         {
                             label: 'Pengeluaran Bulan Ini',
-                            data: pengeluaranBulanIni.concat(Array(4 - pengeluaranBulanIni.length).fill(
-                                0)), // Fill remaining weeks with 0
+                            data: pengeluaranBulanIni,
                             borderColor: 'orange',
                             backgroundColor: 'rgba(255, 165, 0, 0.5)',
                             fill: true,
@@ -300,7 +295,7 @@
             });
 
             var labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
+            
             var data = {
                 labels: labels,
                 datasets: [{

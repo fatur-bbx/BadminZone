@@ -32,17 +32,17 @@ class PendapatanSeeder extends Seeder
                 $barang_id = null;
                 $harga = rand(1000, 50000);
             }
-
+            $tanggal_sekarang = $this->randomDate('2020-01-01', now()->toDateString());
             Pendapatan::create([
                 'id_pendapatan' => Str::uuid(),
                 'jenis_pendapatan' => $jenis_pendapatan,
                 'barang' => $barang_id,
                 'harga' => $harga,
                 'jumlah' => rand(1, 50),
-                'deskripsi' => $jenis_pendapatan == 1 ? 'Barang ' . $barang_id : 'Lapangan ' . $i,
-                'tanggal_pendapatan' => now(),
-                'created_at' => $this->randomDate('2020-01-01', now()->toDateString()),
-                'updated_at' => now()
+                'deskripsi' => $jenis_pendapatan == 1 ? 'Barang ' . $barang_id : 'Lapangan ' . rand(1,2),
+                'tanggal_pendapatan' => $tanggal_sekarang,
+                'created_at' => $tanggal_sekarang,
+                'updated_at' => $tanggal_sekarang
             ]);
         }
     }

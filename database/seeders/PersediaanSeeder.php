@@ -22,15 +22,15 @@ class PersediaanSeeder extends Seeder
         $cemilan = ['Keripik', 'Cokelat', 'Permen', 'Biskuit', 'Kacang', 'Wafer'];
         $minuman = ['Air Mineral', 'Minuman Isotonik', 'Jus Buah', 'Teh Botol', 'Kopi Susu', 'Susu UHT'];
         $barang = array_merge($peralatan_badminton, $cemilan, $minuman);
-
+        $tanggal_sekarang = $this->randomDate('2020-01-01', now()->toDateString());
         foreach ($barang as $item) {
             Persediaan::create([
                 'id_persediaan' => Str::uuid(),
                 'nama_barang' => $item,
                 'harga_pcs' => rand(1000, 50000),
                 'jumlah_persediaan' => rand(1, 100),
-                'created_at' => $this->randomDate('2020-01-01', now()->toDateString()),
-                'updated_at' => now()
+                'created_at' => $tanggal_sekarang,
+                'updated_at' => $tanggal_sekarang
             ]);
         }
     }
