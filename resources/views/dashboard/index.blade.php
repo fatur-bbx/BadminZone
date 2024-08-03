@@ -10,6 +10,7 @@
             echo $startDate . ' - ' . $endDate;
             ?>
         </p>
+        <button class="btn btn-primary mb-4" onclick="window.print()">Cetak Laporan Keuangan</button>
         <hr class="mt-0 mb-4" />
         <div class="row">
 
@@ -73,8 +74,8 @@
                 </div>
             </div>            
         </div>
-        <h2 class="mt-5 mb-0">App Pages</h2>
-        <p>App pages to cover common use pages to help build your app!</p>
+        <h2 class="mt-5 mb-0">KPI</h2>
+        <p>Indikator Kinerja Utama (Key Performance Indicator) atau biasa disebut KPI dalam penjualan, pengeluaran, dan persediaan.</p>
         <hr class="mt-0 mb-4" />
         <div class="row">
 
@@ -83,7 +84,7 @@
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Top Products</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Top Produk Paling Laku</h6>
                     </div>
                     <div class="card-body">
                         @foreach ($topProducts as $product)
@@ -142,7 +143,7 @@
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Top Products</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Persediaan Barang Yang Menipis</h6>
                     </div>
                     <div class="card-body">
                         @foreach ($lowStockProducts as $product)
@@ -163,7 +164,7 @@
             <div class="col-lg-6 mb-4">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Pengeluaran</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Pendapatan dan Pengeluaran di Tahun {{date('Y')}}</h6>
                     </div>
                     <div class="card-body">
                         <canvas id="financialChart" width="400" height="200"></canvas>
@@ -176,7 +177,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             let fieldVisits = @json($fieldVisits);
-            let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            let days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'];
             let visitsLapangan1 = new Array(7).fill(0);
             let visitsLapangan2 = new Array(7).fill(0);
 
@@ -223,7 +224,7 @@
 
             var pendapatanBulanIni = @json($pendapatanBulanIni);
             var pendapatanBulanLalu = @json($pendapatanBulanLalu);
-            var labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+            var labels = ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'];
 
             var pendapatanChart = new Chart(ctx, {
                 type: 'line',
@@ -261,7 +262,7 @@
             var pengeluaranBulanIni = @json($pengeluaranBulanIni);
             var pengeluaranBulanLalu = @json($pengeluaranBulanLalu);
 
-            var labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+            var labels = ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'];
 
             var pengeluaranChart = new Chart(ctx, {
                 type: 'line',

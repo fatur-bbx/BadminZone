@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InvoicesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PendapatanController;
@@ -40,6 +41,7 @@ Route::get('/dashboard', function () {
 
     $topProducts = Pendapatan::with('persediaan')
         ->select('barang', 'deskripsi', DB::raw('SUM(jumlah) as total_jumlah'))
+        ->where('barang', 'not like', '%Lapangan%')
         ->groupBy('barang', 'deskripsi')
         ->orderByDesc('total_jumlah')
         ->take(4)
@@ -91,10 +93,30 @@ Route::get('/dashboard', function () {
         ->toArray();
 
     $fieldVisits = DB::table('pendapatan')
-        ->select(DB::raw('DAYNAME(created_at) as day'), 'deskripsi', DB::raw('count(*) as count'))
+        ->select(DB::raw('DAYOFWEEK(created_at) as day_of_week'), 'deskripsi', DB::raw('count(*) as count'))
         ->where('jenis_pendapatan', 2)
-        ->groupBy('day', 'deskripsi')
+        ->groupBy('day_of_week', 'deskripsi')
         ->get();
+
+    $dayNamesMap = [
+        1 => 'Minggu',
+        2 => 'Senin',
+        3 => 'Selasa',
+        4 => 'Rabu',
+        5 => 'Kamis',
+        6 => 'Jum\'at',
+        7 => 'Sabtu'
+    ];
+
+    $fieldVisits = $fieldVisits->map(function ($item) use ($dayNamesMap) {
+        $item->day = $dayNamesMap[$item->day_of_week];
+        return $item;
+    });
+
+    $fieldVisits = $fieldVisits->map(function ($item) {
+        unset($item->day_of_week);
+        return $item;
+    });
 
     $totalJumlahPersediaan = Persediaan::sum('jumlah_persediaan');
 
@@ -144,3 +166,8 @@ Route::middleware(['auth', 'checkadmin'])->group(function () {
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+
+// FAKTUR
+Route::get('/invoices/{id}/download', [InvoicesController::class, 'downloadPDF'])->name('invoices.download');
+Route::get('/invoices/{id}', [InvoicesController::class, 'show'])->name('invoices.show');
