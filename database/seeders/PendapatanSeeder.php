@@ -24,7 +24,7 @@ class PendapatanSeeder extends Seeder
         $persediaan_ids = Persediaan::pluck('id_persediaan')->toArray();
         $user = User::inRandomOrder()->first(); // Ambil satu user secara acak
 
-        for ($i = 1; $i <= 300; $i++) {
+        for ($i = 1; $i <= 1000; $i++) {
             $jenis_pendapatan = rand(1, 2);
 
             if ($jenis_pendapatan == 1) {

@@ -21,7 +21,7 @@ class PengeluaranSeeder extends Seeder
     {
         $persediaan_ids = Persediaan::pluck('id_persediaan')->toArray();
 
-        for ($i = 1; $i <= 300; $i++) {
+        for ($i = 1; $i <= 750; $i++) {
             $jenis_pengeluaran = rand(1, 2);
 
             if ($jenis_pengeluaran == 2) {

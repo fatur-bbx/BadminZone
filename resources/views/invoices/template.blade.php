@@ -44,11 +44,11 @@
                 <td class="desc">{{ $invoice->pendapatan->deskripsi }}</td>
                 <td class="unit">Rp. {{ number_format($invoice->pendapatan->harga, 2) }}</td>
                 <td class="qty">{{ $invoice->pendapatan->jumlah }}</td>
-                <td class="total">${{ number_format($invoice->pendapatan->harga * $invoice->pendapatan->jumlah, 2) }}</td>
+                <td class="total">Rp. {{ number_format($invoice->pendapatan->harga * $invoice->pendapatan->jumlah, 2) }}</td>
             </tr>
             <tr>
                 <td colspan="4" class="grand total">TOTAL</td>
-                <td class="grand total">${{ number_format($invoice->pendapatan->harga * $invoice->pendapatan->jumlah, 2) }}</td>
+                <td class="grand total">Rp. {{ number_format($invoice->pendapatan->harga * $invoice->pendapatan->jumlah, 2) }}</td>
             </tr>
         </tbody>
     </table>

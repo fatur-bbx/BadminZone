@@ -135,7 +135,7 @@
                                 <td>{{ $item->jumlah }}</td>
                                 <td>{{ $item->deskripsi }}</td>
                                 <td>
-                                    <a class="btn btn-datatable btn-transparent-purple me-2" target="_blank" href="{{ route('invoices.show', $item->invoice->id_faktur) }}">Invoice</a>
+                                    <a class="btn btn-datatable btn-transparent-purple me-2" target="_blank" href="{{ route('invoices.show', $item->invoice) }}">Invoice</a>
                                     <a class="btn btn-datatable btn-icon btn-transparent-purple me-2"
                                         data-bs-toggle="modal" data-bs-target="#modalEdit{{ $nomor }}"><i
                                             data-feather="edit"></i></a>

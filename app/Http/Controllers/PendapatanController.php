@@ -16,12 +16,16 @@ class PendapatanController extends Controller
 {
     public function index()
     {
-        $pendapatan = Pendapatan::with('persediaan')->get();
+        $pendapatan = Pendapatan::with('persediaan')->orderBy('tanggal_pendapatan','desc')->get();
         $persediaan = Persediaan::orderBy('updated_at', 'desc')->get();
         $title = "Pendapatan";
         foreach($pendapatan as $p){
-            $invoices = invoices::where("id_pendapatan", $p->id_pendapatan)->get();
-            $p['invoice'] = $invoices[0];
+            $invoices = invoices::where("id_pendapatan", $p->id_pendapatan)->first();
+            if($invoices){
+                $p['invoice'] = $invoices->id_faktur;
+            }else{
+                $p['invoice'] = 0;
+            }
         }
         $subtitle = "Halaman ini menampilkan daftar semua pendapatan yang telah dicatat dalam sistem. Setiap entri pendapatan mencakup informasi detail seperti jenis pendapatan, barang terkait, harga, jumlah, deskripsi, dan tanggal pendapatan.";
         return view('dashboard.pendapatan', compact('pendapatan', 'title', 'subtitle', 'persediaan'));
@@ -70,15 +74,15 @@ class PendapatanController extends Controller
 
             $invoiceData = [
                 'nama_faktur' => $invoiceName,
-                'handle_faktur' => auth()->usser()->email,
+                'handle_faktur' => auth()->user()->email,
                 'id_pendapatan' => $pendapatan->id_pendapatan,
                 'email_handle_faktur' => auth()->user()->email,
                 'created_at' => now(),
             ];
 
-            $invoice = invoices::create($invoiceData);
+            invoices::create($invoiceData);
 
-            return redirect()->route('invoices.show', $invoice->id_faktur)->with('success', 'Data berhasil ditambahkan!');
+            return redirect()->route('pendapatan')->with('success', 'Data berhasil ditambahkan!');
         } catch (\Exception $e) {
             return redirect()->route('pendapatan')->with('error', 'Terjadi kesalahan saat menambahkan data: ' . $e->getMessage());
         }
